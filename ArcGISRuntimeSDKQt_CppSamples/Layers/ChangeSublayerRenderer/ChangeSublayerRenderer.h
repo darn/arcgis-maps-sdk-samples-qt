@@ -27,6 +27,8 @@ class Renderer;
 class ClassBreaksRenderer;
 class ArcGISMapImageSublayer;
 class ClassBreak;
+class Symbol;
+class SimpleFillSymbol;
 }
 }
 
@@ -43,6 +45,7 @@ public:
   void componentComplete() override;
   static void init();
   Q_INVOKABLE void applyRenderer();
+  Q_INVOKABLE void applyAlternateSymbolRenderer();
   Q_INVOKABLE void resetRenderer();
 
 signals:
@@ -53,9 +56,15 @@ private:
   Esri::ArcGISRuntime::MapQuickView* m_mapView = nullptr;
   Esri::ArcGISRuntime::Renderer* m_originalRenderer = nullptr;
   Esri::ArcGISRuntime::ClassBreaksRenderer* m_classBreaksRenderer = nullptr;
+  Esri::ArcGISRuntime::ClassBreaksRenderer* m_alternateSymbolClassBreaksRenderer = nullptr;
   Esri::ArcGISRuntime::ArcGISMapImageSublayer* m_sublayer = nullptr;
   void createClassBreaksRenderer();
   Esri::ArcGISRuntime::ClassBreak* createClassBreak(const QColor& color, double min, double max);
+
+  // alternate symbols
+  void createAlternateSymbolsClassBreaksRenderer();
+  Esri::ArcGISRuntime::ClassBreak* createAlternateSymbolsClassBreak(const QColor& color, double min, double max);
+  QList<Esri::ArcGISRuntime::Symbol*> createAlternateSymbols_(const Esri::ArcGISRuntime::SimpleFillSymbol* sfs);
 };
 
 #endif // CHANGESUBLAYERRENDERER_H

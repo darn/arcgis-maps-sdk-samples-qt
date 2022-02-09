@@ -28,6 +28,8 @@
 #include "ClassBreaksRenderer.h"
 #include "SimpleFillSymbol.h"
 #include "SimpleLineSymbol.h"
+#include "SymbolReferenceProperties.h"
+#include "Symbol.h"
 
 using namespace Esri::ArcGISRuntime;
 
@@ -128,6 +130,72 @@ void ChangeSublayerRenderer::applyRenderer()
     return;
 
   m_sublayer->setRenderer(m_classBreaksRenderer);
+}
+
+
+/// Methods for CBR with alternate symbols
+
+void ChangeSublayerRenderer::createAlternateSymbolsClassBreaksRenderer()
+{
+  // create class breaks renderer
+  m_classBreaksRenderer = new ClassBreaksRenderer(this);
+  m_classBreaksRenderer->setFieldName(QStringLiteral("POP2007"));
+
+  // create and append class breaks
+  m_classBreaksRenderer->classBreaks()->append(createClassBreak(QColor(227, 235, 207), -99, 8560));
+  m_classBreaksRenderer->classBreaks()->append(createClassBreak(QColor(150, 194, 191), 8560, 18109));
+  m_classBreaksRenderer->classBreaks()->append(createClassBreak(QColor(97, 166, 181), 18109, 35501));
+  m_classBreaksRenderer->classBreaks()->append(createClassBreak(QColor(69, 125, 150), 35501, 86100));
+  m_classBreaksRenderer->classBreaks()->append(createClassBreak(QColor(41, 84, 120), 86100, 10110975));
+}
+
+// helper function to create class breaks for the renderer
+ClassBreak* ChangeSublayerRenderer::createAlternateSymbolsClassBreak(const QColor &color, double min, double max)
+{
+  //  SimpleLineSymbol* outline = new SimpleLineSymbol(SimpleLineSymbolStyle::Solid, QColor(153, 153, 153), 1.0f /*width*/, this);
+  //  SimpleFillSymbol* sfs1 = new SimpleFillSymbol(SimpleFillSymbolStyle::Solid, color, outline, this);
+  //  const QString description = QString("> %1 to %2").arg(QString::number(min), QString::number(max));
+  //  const QString label = description;
+  //  return new ClassBreak(description, label, min, max, sfs1);
+
+  auto sfs = new SimpleFillSymbol(this);
+  sfs->setColor(QColor("red"));
+  auto mlSym1 = sfs->toMultilayerSymbol();
+  mlSym1->setReferenceProperties(new SymbolReferenceProperties(0, 1000, this));
+  auto alternateSymbols = createAlternateSymbols_(sfs);
+  ClassBreaksRenderer* cbr_1 = new ClassBreaksRenderer("CB1", "CB1", 0, 6, mlSym1, alternateSymbols, this);
+  cbr_1->setDefaultSymbol(mlSym1);
+
+  cbr_1->setFieldName("SmallIntF");
+
+
+
+//  SimpleFillSymbol* default_symbol = new SimpleFillSymbol(SimpleFillSymbolStyle.Solid,Color.Cyan,null);
+//  cbr.DefaultSymbol = default_symbol.ToMultilayerSymbol();
+//  cbr.MinValue = 0;
+}
+
+QList<Symbol*> ChangeSublayerRenderer::createAlternateSymbols_(const SimpleFillSymbol* sfs)
+{
+  // create first alternate symbol
+  auto mlAltSym1 = sfs->toMultilayerSymbol();
+  mlAltSym1->setColor(QColor("yellow"));
+  mlAltSym1->setReferenceProperties(new SymbolReferenceProperties(0, 5000, this));
+
+  // create second alternate symbol
+  auto mlAltSym2 = sfs->toMultilayerSymbol();
+  mlAltSym2->setColor(QColor("magenta"));
+  mlAltSym2->setReferenceProperties(new SymbolReferenceProperties(5000, 10000, this));
+
+  return {mlAltSym1, mlAltSym2};
+}
+
+void ChangeSublayerRenderer::applyAlternateSymbolRenderer()
+{
+  if (!m_sublayer || !m_classBreaksRenderer)
+    return;
+
+  m_sublayer->setRenderer(m_alternateSymbolClassBreaksRenderer);
 }
 
 // reset to the original renderer

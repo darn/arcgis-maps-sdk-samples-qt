@@ -60,6 +60,14 @@ ChangeSublayerRendererSample {
         }
 
         Button {
+            id: applyAlternateSymbolRendererButton
+            width: 200
+            enabled: false
+            text: "Apply Alternate Symbol Renderer"
+            onClicked: applyAlternateSymbolRenderer();
+        }
+
+        Button {
             id: resetRendererButton
             width: 200
             enabled: false
