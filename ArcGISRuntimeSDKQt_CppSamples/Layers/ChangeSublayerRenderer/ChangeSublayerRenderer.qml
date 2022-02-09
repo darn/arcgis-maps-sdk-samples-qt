@@ -40,6 +40,7 @@ ChangeSublayerRendererSample {
 
     onSublayerLoaded: {
         applyRendererButton.enabled = true;
+        applyAlternateSymbolRendererButton.enabled = true;
         resetRendererButton.enabled = true;
     }
 
