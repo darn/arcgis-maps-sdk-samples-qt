@@ -217,7 +217,7 @@ void EditAndSyncFeatures::generateGeodatabaseFromCorners(double xCorner1, double
   const Geometry geodatabaseExtent = GeometryEngine::project(extent, SpatialReference::webMercator());
 
   // get the updated parameters
-  GenerateGeodatabaseParameters params = getGenerateParameters(geodatabaseExtent);
+  GenerateGeodatabaseParameters params = getGenerateParameters(static_cast<Envelope>(geodatabaseExtent));
 
   // execute the task and obtain the job
   const QString outputGdb = m_temporaryDir.path() + "/Wildfire.geodatabase";

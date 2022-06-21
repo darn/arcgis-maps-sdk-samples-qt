@@ -381,7 +381,7 @@ void PerformValveIsolationTrace::connectSignals()
   {
     // display starting location
     ArcGISFeatureListModel* elementFeaturesList = m_utilityNetwork->featuresForElementsResult();
-    const Point startingLocationGeometry = elementFeaturesList->first()->geometry();
+    const Point startingLocationGeometry = geometry_cast<Point>(elementFeaturesList->first()->geometry());
     Graphic* graphic = new Graphic(startingLocationGeometry, m_graphicParent.get());
     m_startingLocationOverlay->graphics()->append(graphic);
 

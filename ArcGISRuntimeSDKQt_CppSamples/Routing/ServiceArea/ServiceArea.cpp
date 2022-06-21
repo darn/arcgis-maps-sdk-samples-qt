@@ -115,7 +115,7 @@ void ServiceArea::solveServiceArea()
     if (!g)
       continue;
 
-    facilities.append(ServiceAreaFacility(g->geometry()));
+    facilities.append(ServiceAreaFacility(geometry_cast<Point>(g->geometry())));
   }
   m_parameters.setFacilities(facilities);
 

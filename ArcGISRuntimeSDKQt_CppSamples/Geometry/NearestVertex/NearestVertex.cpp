@@ -136,7 +136,7 @@ void NearestVertex::setupGraphics()
   {
     const Point clickedLocation = m_mapView->screenToLocation(e.x(), e.y());
     // normalizing the geometry before performing geometric operations
-    const Geometry normalizedPoint = GeometryEngine::normalizeCentralMeridian(clickedLocation);
+    const Point normalizedPoint = geometry_cast<Point>(GeometryEngine::normalizeCentralMeridian(clickedLocation));
 
     clickedLocationGraphic->setGeometry(normalizedPoint);
 
