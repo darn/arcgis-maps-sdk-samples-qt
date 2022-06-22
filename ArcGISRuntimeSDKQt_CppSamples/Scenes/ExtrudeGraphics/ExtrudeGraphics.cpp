@@ -143,6 +143,6 @@ Esri::ArcGISRuntime::Polygon ExtrudeGraphics::createPolygonFromPoints(QList<Poin
     // add each point to the builder object
     pb->addPoint(point);
   }
-  return polygon = pb->toGeometry();
+  return polygon = pb->toPolygon();
 }
 

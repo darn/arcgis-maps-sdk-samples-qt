@@ -128,7 +128,7 @@ void ServiceArea::solveServiceArea()
     if (!g)
       continue;
 
-    barriers.append(PolylineBarrier(g->geometry()));
+    barriers.append(PolylineBarrier(geometry_cast<Polyline>(g->geometry())));
   }
 
   if (!barriers.isEmpty())

@@ -436,7 +436,7 @@ void PerformValveIsolationTrace::onIdentifyLayersCompleted(QUuid, const QList<Id
   {
     if (feature->geometry().geometryType() == GeometryType::Polyline)
     {
-      const Polyline line = GeometryEngine::removeZ(feature->geometry());
+      const Polyline line = geometry_cast<Polyline>(GeometryEngine::removeZ(feature->geometry()));
       // Set how far the element is along the edge.
       const double fraction = GeometryEngine::fractionAlong(line, m_clickPoint, -1);
       m_element->setFractionAlongEdge(fraction);
