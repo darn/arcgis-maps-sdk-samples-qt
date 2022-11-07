@@ -36,6 +36,7 @@
 #include "ArcGISSublayerListModel.h"
 #include "ArcGISSublayer.h"
 #include "SpatialReference.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 
@@ -105,12 +106,12 @@ void IdentifyLayers::componentComplete()
 void IdentifyLayers::connectSignals()
 {
   // identify layers on mouse click
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     const double tolerance = 12.0;
     const bool returnPopups = false;
     const int maxResults = 10;
-    m_mapView->identifyLayers(mouseEvent.pos().x(), mouseEvent.pos().y(), tolerance, returnPopups, maxResults);
+    m_mapView->identifyLayers(mouseEvent->pos().x(), mouseEvent->pos().y(), tolerance, returnPopups, maxResults);
   });
 
   // handle the identify results

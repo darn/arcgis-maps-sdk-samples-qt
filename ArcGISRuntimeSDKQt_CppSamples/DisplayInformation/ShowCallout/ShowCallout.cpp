@@ -28,6 +28,8 @@
 #include "SpatialReference.h"
 #include "Point.h"
 #include "Viewpoint.h"
+#include "QuickMouseEvent.h"
+
 #include <QImage>
 
 using namespace Esri::ArcGISRuntime;
@@ -69,13 +71,13 @@ void ShowCallout::componentComplete()
   //! [initialize callout]
 
   // display callout on mouseClicked
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent){
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent){
     if (m_mapView->calloutData()->isVisible())
       m_mapView->calloutData()->setVisible(false);
     else
     {
       // set callout position
-      Point mapPoint(m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y()));
+      Point mapPoint(m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y()));
       m_mapView->calloutData()->setLocation(mapPoint);
 
       // set detail as coordinates formatted to decimal numbers with precision 2

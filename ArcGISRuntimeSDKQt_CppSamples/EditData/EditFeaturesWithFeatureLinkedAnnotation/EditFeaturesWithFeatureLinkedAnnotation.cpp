@@ -44,6 +44,7 @@
 #include "Viewpoint.h"
 #include "Polyline.h"
 #include "SpatialReference.h"
+#include "QuickMouseEvent.h"
 
 // Qt headers
 #include <QString>
@@ -129,7 +130,7 @@ void EditFeaturesWithFeatureLinkedAnnotation::setMapView(MapQuickView* mapView)
   m_mapView = mapView;
   m_mapView->setMap(m_map);
 
-  connect(m_mapView, &MapQuickView::mouseClicked, this, &EditFeaturesWithFeatureLinkedAnnotation::onMouseClicked);
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this] (QuickMouseEvent* mouseEvent) { onMouseClicked(mouseEvent->qMouseEvent()); });
   connect(m_mapView, &MapQuickView::identifyLayersCompleted, this, &EditFeaturesWithFeatureLinkedAnnotation::onIdentifyLayersCompleted);
 
   emit mapViewChanged();

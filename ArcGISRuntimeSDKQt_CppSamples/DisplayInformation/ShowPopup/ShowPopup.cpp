@@ -34,6 +34,7 @@
 #include "PopupAttachmentManager.h"
 #include "PopupAttributeListModel.h"
 #include "PopupAttachmentListModel.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 
@@ -75,7 +76,7 @@ void ShowPopup::setMapView(MapQuickView* mapView)
   m_mapView->setMap(m_map);
 
   // once map is set, connect to MapQuickView mouse clicked signal
-  connect(m_mapView, &MapQuickView::mouseClicked, this, &ShowPopup::onMouseClicked);
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this] (QuickMouseEvent* mouseEvent) { onMouseClicked(mouseEvent->qMouseEvent()); } );
 
   // connect to MapQuickView::identifyLayerCompleted signal
   connect(m_mapView, &MapQuickView::identifyLayerCompleted, this, &ShowPopup::onIdentifyLayerCompleted);

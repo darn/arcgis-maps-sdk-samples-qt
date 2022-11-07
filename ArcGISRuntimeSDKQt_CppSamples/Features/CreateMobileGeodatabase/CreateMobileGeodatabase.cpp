@@ -47,6 +47,7 @@
 #include "Viewpoint.h"
 #include "SpatialReference.h"
 #include "Point.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 
@@ -91,7 +92,7 @@ void CreateMobileGeodatabase::setMapView(MapQuickView* mapView)
 
 void CreateMobileGeodatabase::createConnections()
 {
-  connect(m_mapView, &MapQuickView::mouseClicked, this, &CreateMobileGeodatabase::addFeature);
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this] (QuickMouseEvent* mouseEvent) { addFeature(mouseEvent->qMouseEvent()); });
 
   // Use the Geodatabase::instance() singleton to connect to createCompleted
   connect(Geodatabase::instance(), &Geodatabase::createCompleted, this, [this](QUuid, Geodatabase* geodatabase)

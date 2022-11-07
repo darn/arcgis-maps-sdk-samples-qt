@@ -34,6 +34,7 @@
 #include "TaskWatcher.h"
 #include "AnalysisListModel.h"
 #include "SpatialReference.h"
+#include "QuickMouseEvent.h"
 
 using namespace Esri::ArcGISRuntime;
 
@@ -93,30 +94,30 @@ void ViewshedLocation::setInitialViewpoint()
 void ViewshedLocation::connectSignals()
 {
   // on mouse click perform the location viewshed
-  connect(m_sceneView, &SceneQuickView::mouseClicked, this, [this](QMouseEvent& event)
+  connect(m_sceneView, &SceneQuickView::mouseClicked, this, [this](QuickMouseEvent* event)
   {
     if (!m_locationViewshed)
-      createViewshed(event.pos().x(), event.pos().y());
+      createViewshed(event->pos().x(), event->pos().y());
     else
     {
-      const Point pt = m_sceneView->screenToBaseSurface(event.pos().x(), event.pos().y());
+      const Point pt = m_sceneView->screenToBaseSurface(event->pos().x(), event->pos().y());
       m_locationViewshed->setLocation(pt);
     }
   });
 
-  connect(m_sceneView, &SceneQuickView::mousePressedAndHeld, this, [this](QMouseEvent& event)
+  connect(m_sceneView, &SceneQuickView::mousePressedAndHeld, this, [this](QuickMouseEvent* event)
   {
     if (!m_locationViewshed)
-      createViewshed(event.pos().x(), event.pos().y());
+      createViewshed(event->pos().x(), event->pos().y());
 
     m_calculating = true;
   });
 
-  connect(m_sceneView, &SceneQuickView::mouseMoved, this, [this](QMouseEvent& event)
+  connect(m_sceneView, &SceneQuickView::mouseMoved, this, [this](QuickMouseEvent* event)
   {
     if (m_calculating)
     {
-      const Point pt = m_sceneView->screenToBaseSurface(event.pos().x(), event.pos().y());
+      const Point pt = m_sceneView->screenToBaseSurface(event->pos().x(), event->pos().y());
       m_locationViewshed->setLocation(pt);
     }
   });

@@ -64,6 +64,7 @@
 #include "Envelope.h"
 #include "Viewpoint.h"
 #include "Polyline.h"
+#include "QuickMouseEvent.h"
 
 using namespace Esri::ArcGISRuntime;
 
@@ -174,15 +175,15 @@ void TraceUtilityNetwork::addUtilityNetworkToMap(const Error& error)
 void TraceUtilityNetwork::connectSignals()
 {
   // identify layers on mouse click
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     if (m_map->loadStatus() != LoadStatus::Loaded)
       return;
 
     constexpr double tolerance = 10.0;
     constexpr bool returnPopups = false;
-    m_clickPoint = m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y());
-    m_mapView->identifyLayers(mouseEvent.pos().x(), mouseEvent.pos().y(), tolerance, returnPopups);
+    m_clickPoint = m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y());
+    m_mapView->identifyLayers(mouseEvent->pos().x(), mouseEvent->pos().y(), tolerance, returnPopups);
   });
 
   // handle the identify results

@@ -35,6 +35,7 @@
 #include "LayerListModel.h"
 #include "TaskWatcher.h"
 #include "IdentifyLayerResult.h"
+#include "QuickMouseEvent.h"
 
 #include <QUrl>
 #include <QUuid>
@@ -94,10 +95,10 @@ void UpdateGeometryFeatureService::componentComplete()
 void UpdateGeometryFeatureService::connectSignals()
 {
   // connect to the mouse clicked signal on the MapQuickView
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     // get the point from the mouse point
-    Point mapPoint = m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y());
+    Point mapPoint = m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y());
 
     // if a feature is already selected, move the selected feature to the new geometry
     if (m_featureSelected)
@@ -120,7 +121,7 @@ void UpdateGeometryFeatureService::connectSignals()
       m_featureLayer->clearSelection();
 
       // call identify on the map view
-      m_mapView->identifyLayer(m_featureLayer, mouseEvent.pos().x(), mouseEvent.pos().y(), 5, false, 1);
+      m_mapView->identifyLayer(m_featureLayer, mouseEvent->pos().x(), mouseEvent->pos().y(), 5, false, 1);
     }
   });
 

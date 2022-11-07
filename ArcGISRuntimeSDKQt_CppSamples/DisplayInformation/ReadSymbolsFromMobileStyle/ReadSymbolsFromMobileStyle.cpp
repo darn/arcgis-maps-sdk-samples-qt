@@ -39,6 +39,7 @@
 #include "GraphicsOverlayListModel.h"
 #include "GraphicListModel.h"
 #include "SymbolStyleSearchResult.h"
+#include "QuickMouseEvent.h"
 
 #include <QObject>
 #include <QQmlContext>
@@ -199,12 +200,12 @@ void ReadSymbolsFromMobileStyle::setMapView(MapQuickView* mapView)
   m_mapView->graphicsOverlays()->append(overlay);
 
   // connect to mouse clicked signal
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this, overlay](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this, overlay](QuickMouseEvent* mouseEvent)
   {
     if (!m_currentSymbol)
       return;
 
-    const Point clickedPoint = m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y());
+    const Point clickedPoint = m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y());
     Graphic* graphic = new Graphic(clickedPoint, m_currentSymbol, m_graphicParent.get());
     overlay->graphics()->append(graphic);
   });

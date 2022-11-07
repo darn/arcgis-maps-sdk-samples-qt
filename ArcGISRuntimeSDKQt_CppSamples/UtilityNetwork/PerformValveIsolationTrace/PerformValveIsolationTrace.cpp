@@ -63,6 +63,7 @@
 #include "IdentifyLayerResult.h"
 #include "ArcGISFeature.h"
 #include "Polyline.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 
@@ -163,15 +164,15 @@ void PerformValveIsolationTrace::setMapView(MapQuickView* mapView)
   m_mapView = mapView;
   m_mapView->setMap(m_map);
 
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     if (m_map->loadStatus() != LoadStatus::Loaded)
       return;
 
     constexpr double tolerance = 10.0;
     constexpr bool returnPopups = false;
-    m_clickPoint = m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y());
-    m_mapView->identifyLayers(mouseEvent.pos().x(), mouseEvent.pos().y(), tolerance, returnPopups);
+    m_clickPoint = m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y());
+    m_mapView->identifyLayers(mouseEvent->pos().x(), mouseEvent->pos().y(), tolerance, returnPopups);
   });
 
   // handle the identify resultss

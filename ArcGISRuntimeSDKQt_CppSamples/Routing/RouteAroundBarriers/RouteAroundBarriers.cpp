@@ -47,6 +47,7 @@
 #include "Viewpoint.h"
 #include "Point.h"
 #include "Polyline.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 #include <QDir>
@@ -140,9 +141,9 @@ void RouteAroundBarriers::connectRouteSignals()
     }
   });
 
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& e)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* e)
   {
-    const Point clickedPoint = m_mapView->screenToLocation(e.pos().x(), e.pos().y());
+    const Point clickedPoint = m_mapView->screenToLocation(e->pos().x(), e->pos().y());
     if (m_addStops)
     {
       // add stop to list of stops

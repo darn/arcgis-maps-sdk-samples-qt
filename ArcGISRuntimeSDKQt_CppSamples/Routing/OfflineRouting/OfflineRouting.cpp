@@ -51,6 +51,7 @@
 #include "Basemap.h"
 #include "Point.h"
 #include "SpatialReference.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 #include <memory>
@@ -194,16 +195,16 @@ void OfflineRouting::connectSignals()
   });
 
   // check whether mouse pressed over an existing stop
-  connect(m_mapView, &MapQuickView::mousePressed, this, [this](QMouseEvent& e){
-    m_mapView->identifyGraphicsOverlay(m_stopsOverlay, e.pos().x(), e.pos().y(), 10, false);
+  connect(m_mapView, &MapQuickView::mousePressed, this, [this](QuickMouseEvent* e){
+    m_mapView->identifyGraphicsOverlay(m_stopsOverlay, e->pos().x(), e->pos().y(), 10, false);
   });
 
   // get stops from clicked locations
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& e){
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* e){
     if (!m_selectedGraphic)
     {
       // return if point is outside of bounds
-      if (!GeometryEngine::within(m_mapView->screenToLocation(e.pos().x(), e.pos().y()), m_routableArea))
+      if (!GeometryEngine::within(m_mapView->screenToLocation(e->pos().x(), e->pos().y()), m_routableArea))
       {
         qWarning() << "Outside of routable area.";
         return;
@@ -211,35 +212,35 @@ void OfflineRouting::connectSignals()
       TextSymbol* textSymbol = new TextSymbol(QString::number(m_stopsOverlay->graphics()->size() + 1), Qt::white, 20, HorizontalAlignment::Center, VerticalAlignment::Bottom, this);
       textSymbol->setOffsetY(m_pinSymbol->height() / 2);
       CompositeSymbol* stopLabel = new CompositeSymbol(QList<Symbol*>{m_pinSymbol, textSymbol}, this);
-      Graphic* stopGraphic = new Graphic(m_mapView->screenToLocation(e.pos().x(), e.pos().y()), stopLabel, this);
+      Graphic* stopGraphic = new Graphic(m_mapView->screenToLocation(e->pos().x(), e->pos().y()), stopLabel, this);
       m_stopsOverlay->graphics()->append(stopGraphic);
       findRoute();
     }
-    e.accept();
+    e->accept();
   });
 
   // mouseMoved is processed before identifyGraphicsOverlayCompleted, so must clear graphic upon mouseReleased
-  connect(m_mapView, &MapQuickView::mouseReleased, this, [this](QMouseEvent& e) {
+  connect(m_mapView, &MapQuickView::mouseReleased, this, [this](QuickMouseEvent* e) {
     if (m_selectedGraphic)
     {
       m_selectedGraphic = nullptr;
-      e.accept();
+      e->accept();
     }
   });
 
   // if mouse is moved while pressing on a graphic, the click-and-pan effect of the MapView is prevented by e.accept()
-  connect(m_mapView, &MapQuickView::mouseMoved, this, [this](QMouseEvent&e){
+  connect(m_mapView, &MapQuickView::mouseMoved, this, [this](QuickMouseEvent* e){
     if (m_selectedGraphic)
     {
-      e.accept();
+      e->accept();
 
       // return if point is outside of bounds
-      if (!GeometryEngine::within(m_mapView->screenToLocation(e.pos().x(), e.pos().y()), m_routableArea))
+      if (!GeometryEngine::within(m_mapView->screenToLocation(e->pos().x(), e->pos().y()), m_routableArea))
       {
         qWarning() << "Outside of routable area.";
         return;
       }
-      m_selectedGraphic->setGeometry(m_mapView->screenToLocation(e.pos().x(), e.pos().y()));
+      m_selectedGraphic->setGeometry(m_mapView->screenToLocation(e->pos().x(), e->pos().y()));
       findRoute();
     }
   });

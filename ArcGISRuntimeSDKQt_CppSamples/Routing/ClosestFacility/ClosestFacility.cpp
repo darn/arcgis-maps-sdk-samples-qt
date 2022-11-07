@@ -45,6 +45,7 @@
 #include "Graphic.h"
 #include "SimpleLineSymbol.h"
 #include "Polyline.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 
@@ -222,12 +223,12 @@ void ClosestFacility::setupRouting()
     m_routeGraphic->setGeometry(route.routeGeometry());
   });
 
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     if (busy())
       return;
 
-    Point mapPoint = m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y());
+    Point mapPoint = m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y());
     Point incidentPoint(mapPoint.x(), mapPoint.y(), SpatialReference::webMercator());
 
     m_incidentGraphic->setGeometry(incidentPoint);

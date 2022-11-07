@@ -41,6 +41,7 @@
 #include "Basemap.h"
 #include "Envelope.h"
 #include "Point.h"
+#include "QuickMouseEvent.h"
 
 using namespace Esri::ArcGISRuntime;
 
@@ -141,9 +142,9 @@ void NearestVertex::setupGraphics()
   // add graphic to clicked location
   connect(m_mapView, &MapQuickView::mouseClicked, this,
           [nearestVertexGraphic, nearestCoordinateGraphic, polygonBuilder, clickedLocationGraphic, this]
-          (QMouseEvent& e)
+          (QuickMouseEvent* e)
   {
-    const Point clickedLocation = m_mapView->screenToLocation(e.pos().x(), e.pos().y());
+    const Point clickedLocation = m_mapView->screenToLocation(e->pos().x(), e->pos().y());
     // normalizing the geometry before performing geometric operations
     const Point normalizedPoint = geometry_cast<Point>(GeometryEngine::normalizeCentralMeridian(clickedLocation));
 
@@ -159,7 +160,7 @@ void NearestVertex::setupGraphics()
     m_vertexDistance = nearestVertexResult.distance()/5280;
     m_coordinateDistance = nearestCoordinateResult.distance()/5280;
 
-    e.accept();
+    e->accept();
     emit vertexDistanceCalculated();
     emit coordinateDistanceCalculated();
   });

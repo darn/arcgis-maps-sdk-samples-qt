@@ -39,6 +39,7 @@
 #include "SimpleLineSymbol.h"
 #include "Point.h"
 #include "SpatialReference.h"
+#include "QuickMouseEvent.h"
 
 using namespace Esri::ArcGISRuntime;
 
@@ -126,11 +127,11 @@ void ConvexHull::setupGraphics()
 void ConvexHull::getInputs()
 {
   // show clicked points on MapView
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& e)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* e)
   {
-    e.accept();
+    e->accept();
 
-    const Point clickedPoint = m_mapView->screenToLocation(e.pos().x(), e.pos().y());
+    const Point clickedPoint = m_mapView->screenToLocation(e->pos().x(), e->pos().y());
     m_multipointBuilder->points()->addPoint(clickedPoint);
     m_inputsGraphic->setGeometry(m_multipointBuilder->toGeometry());
   });

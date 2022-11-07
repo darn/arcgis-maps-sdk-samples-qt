@@ -36,6 +36,7 @@
 #include "GraphicListModel.h"
 #include "Polygon.h"
 #include "Point.h"
+#include "QuickMouseEvent.h"
 
 #include <cmath>
 
@@ -93,7 +94,7 @@ void Buffer::componentComplete()
   m_graphicsOverlayPoints->setRenderer(new SimpleRenderer(sms, this));
 
   // connect to mouse clicked signal
-  connect(m_mapView, &MapQuickView::mouseClicked, this, &Buffer::onMouseClicked);
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this] (QuickMouseEvent* mouseEvent) { onMouseClicked(mouseEvent->qMouseEvent()); });
 }
 
 // handle the mouse click - perform a buffer on click

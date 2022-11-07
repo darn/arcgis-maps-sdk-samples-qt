@@ -36,6 +36,7 @@
 #include "ArcGISFeature.h"
 #include "ExpressionTypes.h"
 #include "Layer.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 #include <QVariantMap>
@@ -90,14 +91,14 @@ void QueryFeaturesWithArcadeExpression::setMapView(MapQuickView* mapView)
   m_mapView->calloutData()->setVisible(false);
   m_mapView->calloutData()->setTitle("RPD Beats");
 
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent){
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent){
     if (m_mapView->calloutData()->isVisible())
       m_mapView->calloutData()->setVisible(false);
     m_mapView->calloutData()->setDetail("");
     // Set callout position
-    const Point mapPoint(m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y()));
+    const Point mapPoint(m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y()));
     m_mapView->calloutData()->setLocation(mapPoint);
-    m_mapView->identifyLayers(mouseEvent.pos().x(), mouseEvent.pos().y(), 12, false);
+    m_mapView->identifyLayers(mouseEvent->pos().x(), mouseEvent->pos().y(), 12, false);
 
   });
 

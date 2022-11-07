@@ -36,6 +36,7 @@
 #include "ElevationSourceListModel.h"
 #include "Graphic.h"
 #include "Point.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 
@@ -102,7 +103,7 @@ void GetElevationAtPoint::setSceneView(SceneQuickView* sceneView)
   m_sceneView->graphicsOverlays()->append(m_graphicsOverlay);
 
   // Hook up clicks into the 3d scene to below behaviour that displays marker & elevation value.
-  connect(sceneView, &SceneQuickView::mouseClicked, this, &GetElevationAtPoint::displayElevationOnClick);
+  connect(sceneView, &SceneQuickView::mouseClicked, this, [this] (QuickMouseEvent* mouseEvent) { displayElevationOnClick(mouseEvent->qMouseEvent()); });
 
   emit sceneViewChanged();
 }

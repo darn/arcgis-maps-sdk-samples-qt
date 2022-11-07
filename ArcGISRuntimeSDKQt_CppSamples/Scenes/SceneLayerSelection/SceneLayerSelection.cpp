@@ -38,6 +38,7 @@
 #include "LayerListModel.h"
 #include "IdentifyLayerResult.h"
 #include "Feature.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 
@@ -116,13 +117,13 @@ void SceneLayerSelection::connectSignals()
   });
 
   // when the scene is clicked, identify the clicked feature and select it
-  connect(m_sceneView, &SceneQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_sceneView, &SceneQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     // clear any previous selection
     m_sceneLayer->clearSelection();
 
     // identify from the click
-    m_sceneView->identifyLayer(m_sceneLayer, mouseEvent.pos().x(), mouseEvent.pos().y(), 10, false);
+    m_sceneView->identifyLayer(m_sceneLayer, mouseEvent->pos().x(), mouseEvent->pos().y(), 10, false);
   });
 }
 

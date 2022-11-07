@@ -45,6 +45,7 @@
 #include "Graphic.h"
 #include "Viewpoint.h"
 #include "SpatialReference.h"
+#include "QuickMouseEvent.h"
 
 #include <QUrl>
 #include <QUuid>
@@ -109,7 +110,7 @@ void FindPlace::connectSignals()
     m_mapView->locationDisplay()->start();
   });
 
-  connect(m_mapView, &MapQuickView::mousePressed, this, [this](QMouseEvent& /*event*/)
+  connect(m_mapView, &MapQuickView::mousePressed, this, [this](QuickMouseEvent* /*event*/)
   {
     emit hideSuggestionView();
   });
@@ -122,10 +123,10 @@ void FindPlace::connectSignals()
   });
 
   // perform an identify operation on mouse clicked
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& e)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* e)
   {
     emit hideCallout();
-    m_mapView->identifyGraphicsOverlay(m_graphicsOverlay, e.pos().x(), e.pos().y(), 5, false, 1);
+    m_mapView->identifyGraphicsOverlay(m_graphicsOverlay, e->pos().x(), e->pos().y(), 5, false, 1);
   });
 
   // handle the result once identify completes

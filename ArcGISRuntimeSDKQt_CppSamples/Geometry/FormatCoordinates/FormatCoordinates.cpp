@@ -32,6 +32,7 @@
 #include "GraphicsOverlayListModel.h"
 #include "SpatialReference.h"
 #include "GraphicsOverlay.h"
+#include "QuickMouseEvent.h"
 
 using namespace Esri::ArcGISRuntime;
 
@@ -177,10 +178,10 @@ void FormatCoordinates::setMapView(MapQuickView* mapView)
   m_mapView->graphicsOverlays()->append(m_graphicsOverlay);
 
   // connect to the mouse clicked signal on the MapQuickView
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     // get the point from the mouse point
-    Point mapPoint = m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y());
+    Point mapPoint = m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y());
 
     // using the point, refresh the graphic and the text
     handleLocationUpdate(std::move(mapPoint));

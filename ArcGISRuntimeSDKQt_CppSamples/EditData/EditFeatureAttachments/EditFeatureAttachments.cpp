@@ -45,6 +45,7 @@
 #include "Error.h"
 #include "Attachment.h"
 #include "Envelope.h"
+#include "QuickMouseEvent.h"
 
 #include <QUrl>
 #include <QUuid>
@@ -108,7 +109,7 @@ void EditFeatureAttachments::componentComplete()
 void EditFeatureAttachments::connectSignals()
 {
   // connect to the mouse clicked signal on the MapQuickView
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     // first clear the selection
     m_featureLayer->clearSelection();
@@ -117,7 +118,7 @@ void EditFeatureAttachments::connectSignals()
     emit hideWindow();
 
     // call identify on the map view
-    m_mapView->identifyLayer(m_featureLayer, mouseEvent.pos().x(), mouseEvent.pos().y(), 5, false, 1);
+    m_mapView->identifyLayer(m_featureLayer, mouseEvent->pos().x(), mouseEvent->pos().y(), 5, false, 1);
   });
 
   // connect to the viewpoint changed signal on the MapQuickView

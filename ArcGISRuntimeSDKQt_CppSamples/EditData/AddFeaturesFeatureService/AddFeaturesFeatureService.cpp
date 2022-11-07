@@ -34,6 +34,7 @@
 #include "MapTypes.h"
 #include "LayerListModel.h"
 #include "TaskWatcher.h"
+#include "QuickMouseEvent.h"
 
 #include <QUrl>
 #include <QMap>
@@ -96,11 +97,11 @@ void AddFeaturesFeatureService::connectSignals()
 {
   //! [AddFeaturesFeatureService add at mouse click]
   // connect to the mouse clicked signal on the MapQuickView
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     // obtain the map point
-    const double screenX = mouseEvent.pos().x();
-    const double screenY = mouseEvent.pos().y();
+    const double screenX = mouseEvent->pos().x();
+    const double screenY = mouseEvent->pos().y();
     Point newPoint = m_mapView->screenToLocation(screenX, screenY);
 
     // create the feature attributes

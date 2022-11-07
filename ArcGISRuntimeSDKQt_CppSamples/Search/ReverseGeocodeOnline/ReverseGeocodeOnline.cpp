@@ -38,6 +38,7 @@
 #include "Point.h"
 #include "SpatialReference.h"
 #include "Envelope.h"
+#include "QuickMouseEvent.h"
 
 #include <QDir>
 #include <QUrl>
@@ -77,10 +78,10 @@ void ReverseGeocodeOnline::configureGraphic()
 
 void ReverseGeocodeOnline::getAddress()
 {
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& e)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* e)
   {
-    e.accept();
-    const Point clickedLocation = m_mapView->screenToLocation(e.pos().x(), e.pos().y());
+    e->accept();
+    const Point clickedLocation = m_mapView->screenToLocation(e->pos().x(), e->pos().y());
     ReverseGeocodeParameters reverseGeocodeParameters;
     reverseGeocodeParameters.setOutputSpatialReference(m_mapView->spatialReference());
     m_locatorTask->reverseGeocodeWithParameters(clickedLocation, reverseGeocodeParameters);

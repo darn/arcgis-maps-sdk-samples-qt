@@ -35,6 +35,7 @@
 #include "GraphicListModel.h"
 #include "SymbolTypes.h"
 #include "SpatialReference.h"
+#include "QuickMouseEvent.h"
 
 using namespace Esri::ArcGISRuntime;
 
@@ -59,7 +60,7 @@ void ProjectGeometry::componentComplete()
   m_mapView = findChild<MapQuickView*>("mapView");
 
   // connect to mouse clicked signal
-  connect(m_mapView, &MapQuickView::mouseClicked, this, &ProjectGeometry::onMouseClicked);
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this] (QuickMouseEvent* mouseEvent) { onMouseClicked(mouseEvent->qMouseEvent()); });
 
   // Create a map using a topographic basemap
   m_map = new Map(BasemapStyle::ArcGISTopographic, this);

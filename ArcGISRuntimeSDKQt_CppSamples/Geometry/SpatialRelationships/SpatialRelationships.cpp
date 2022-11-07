@@ -41,6 +41,8 @@
 #include "TaskWatcher.h"
 #include "IdentifyGraphicsOverlayResult.h"
 #include "SpatialReference.h"
+#include "QuickMouseEvent.h"
+
 #include <QUuid>
 #include <QStringList>
 #include <memory>
@@ -148,10 +150,10 @@ void SpatialRelationships::addPointGraphic()
 
 void SpatialRelationships::connectSignals()
 {
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     // identify graphics
-    m_mapView->identifyGraphicsOverlay(m_graphicsOverlay, mouseEvent.pos().x(), mouseEvent.pos().y(), 1.0 /*tolerance*/, false /*returnPopupsOnly*/);
+    m_mapView->identifyGraphicsOverlay(m_graphicsOverlay, mouseEvent->pos().x(), mouseEvent->pos().y(), 1.0 /*tolerance*/, false /*returnPopupsOnly*/);
   });
 
   connect(m_mapView, &MapQuickView::identifyGraphicsOverlayCompleted, this, [this](QUuid, IdentifyGraphicsOverlayResult* rawResult)

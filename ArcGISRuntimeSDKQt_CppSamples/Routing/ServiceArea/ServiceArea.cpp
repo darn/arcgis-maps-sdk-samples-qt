@@ -47,6 +47,7 @@
 #include "GraphicsOverlay.h"
 #include "Polyline.h"
 #include "Polygon.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 
@@ -277,7 +278,7 @@ void ServiceArea::setupRouting()
     }
   });
 
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     if (busy())
       return;
@@ -292,7 +293,7 @@ void ServiceArea::setupRouting()
 
     setBusy(true);
 
-    Point mapPoint = m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y());
+    Point mapPoint = m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y());
     Point projectedPoint(mapPoint.x(), mapPoint.y(), SpatialReference::webMercator());
 
     if (m_mode == SampleMode::Barrier)

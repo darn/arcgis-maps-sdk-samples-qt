@@ -35,6 +35,7 @@
 #include "IdentifyGraphicsOverlayResult.h"
 #include "TaskWatcher.h"
 #include "Geometry.h"
+#include "QuickMouseEvent.h"
 
 #include <QMouseEvent>
 #include <QList>
@@ -105,14 +106,14 @@ void IdentifyGraphics::connectSignals()
 {
   //! [identify graphics api snippet]
   // connect to the mouse clicked signal on the MapQuickView
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     // call identify on the map view
     constexpr double tolerance = 5.0;
     constexpr bool returnPopupsOnly = false;
     constexpr int maximumResults = 1;
 
-    m_mapView->identifyGraphicsOverlay(m_graphicsOverlay, mouseEvent.pos().x(), mouseEvent.pos().y(), tolerance, returnPopupsOnly, maximumResults);
+    m_mapView->identifyGraphicsOverlay(m_graphicsOverlay, mouseEvent->pos().x(), mouseEvent->pos().y(), tolerance, returnPopupsOnly, maximumResults);
   });
 
   // connect to the identifyLayerCompleted signal on the map view

@@ -53,6 +53,7 @@
 #include "SimpleFillSymbol.h"
 #include "Polygon.h"
 #include "Graphic.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 #include <QStandardPaths>
@@ -159,7 +160,7 @@ void ContingentValues::createConnections()
     m_gdbFeatureTable->load();
   });
 
-  connect(m_mapView, &MapQuickView::mouseClicked, this, &ContingentValues::createNewEmptyFeature);
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this] (QuickMouseEvent* mouseEvent) { createNewEmptyFeature(mouseEvent->qMouseEvent()); });
 }
 
 // When the user clicks or taps on the map, instantiate a new feature and show the attribute form interface

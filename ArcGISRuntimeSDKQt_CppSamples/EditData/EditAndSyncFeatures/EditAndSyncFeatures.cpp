@@ -47,6 +47,7 @@
 #include "Error.h"
 #include "SyncGeodatabaseJob.h"
 #include "SpatialReference.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 #include <QUrl>
@@ -126,13 +127,13 @@ void EditAndSyncFeatures::componentComplete()
 void EditAndSyncFeatures::connectSignals()
 {
   // lambda expression for the mouse clicked signal on the mapview
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     if (m_isOffline)
     {
       if (!m_selectedFeature)
       {
-        m_mapView->identifyLayer(m_map->operationalLayers()->first(), mouseEvent.pos().x(), mouseEvent.pos().y(), 5, false, 1);
+        m_mapView->identifyLayer(m_map->operationalLayers()->first(), mouseEvent->pos().x(), mouseEvent->pos().y(), 5, false, 1);
       }
       else
       {
@@ -150,7 +151,7 @@ void EditAndSyncFeatures::connectSignals()
         });
 
         // get the point from the mouse point
-        Point mapPoint = m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y());
+        Point mapPoint = m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y());
         m_selectedFeature->setGeometry(mapPoint);
         featureLayer->featureTable()->updateFeature(m_selectedFeature);
       }

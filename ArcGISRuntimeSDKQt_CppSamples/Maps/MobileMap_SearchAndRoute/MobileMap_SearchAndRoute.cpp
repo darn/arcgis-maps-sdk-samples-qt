@@ -49,6 +49,7 @@
 #include "SimpleLineSymbol.h"
 #include "Item.h"
 #include "Polyline.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 #include <QFileInfoList>
@@ -166,14 +167,14 @@ void MobileMap_SearchAndRoute::createMobileMapPackages(int index)
 
 void MobileMap_SearchAndRoute::connectSignals()
 {
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     if (m_currentLocatorTask)
     {
-      m_clickedPoint = Point(m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y()));
+      m_clickedPoint = Point(m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y()));
 
       // determine if user clicked on a graphic
-      m_mapView->identifyGraphicsOverlay(m_stopsGraphicsOverlay, mouseEvent.pos().x(), mouseEvent.pos().y(), 5, false, 2);
+      m_mapView->identifyGraphicsOverlay(m_stopsGraphicsOverlay, mouseEvent->pos().x(), mouseEvent->pos().y(), 5, false, 2);
     }
   });
 

@@ -42,6 +42,7 @@
 #include "FeatureIterator.h"
 #include "CalloutData.h"
 #include "Envelope.h"
+#include "QuickMouseEvent.h"
 
 #include <QUrl>
 #include <QUuid>
@@ -93,7 +94,7 @@ void DeleteFeaturesFeatureService::componentComplete()
 void DeleteFeaturesFeatureService::connectSignals()
 {
   // connect to the mouse clicked signal on the MapQuickView
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     // first clear the selection
     m_featureLayer->clearSelection();
@@ -105,8 +106,8 @@ void DeleteFeaturesFeatureService::connectSignals()
     // call identify on the map view
     constexpr double tolerance = 5.0;
     constexpr int maxResults = 1;
-    const double screenX = mouseEvent.pos().x();
-    const double screenY = mouseEvent.pos().y();
+    const double screenX = mouseEvent->pos().x();
+    const double screenY = mouseEvent->pos().y();
     constexpr bool returnPopupsOnly = false;
     m_mapView->identifyLayer(m_featureLayer, screenX, screenY, tolerance, returnPopupsOnly, maxResults);
     //! [DeleteFeaturesFeatureService identify feature]

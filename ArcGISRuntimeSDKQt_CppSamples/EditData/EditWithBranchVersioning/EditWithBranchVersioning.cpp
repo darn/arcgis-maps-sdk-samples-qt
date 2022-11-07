@@ -44,6 +44,7 @@
 #include "Envelope.h"
 #include "Viewpoint.h"
 #include "Polyline.h"
+#include "QuickMouseEvent.h"
 
 using namespace Esri::ArcGISRuntime;
 
@@ -111,7 +112,7 @@ void EditWithBranchVersioning::onMapDoneLoading(const Error& error)
   // connect all needed service geodatabase signals
   connectSgdbSignals();
 
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     m_busy = true;
     emit busyChanged();
@@ -130,13 +131,13 @@ void EditWithBranchVersioning::onMapDoneLoading(const Error& error)
         emit busyChanged();
         return;
       }
-      const Point clickedPoint = m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y());
+      const Point clickedPoint = m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y());
       moveFeature(clickedPoint);
     }
     else
     {
       // call identify on the map view
-      m_mapView->identifyLayer(m_featureLayer, mouseEvent.pos().x(), mouseEvent.pos().y(), 5, false, 1);
+      m_mapView->identifyLayer(m_featureLayer, mouseEvent->pos().x(), mouseEvent->pos().y(), 5, false, 1);
     }
   });
 

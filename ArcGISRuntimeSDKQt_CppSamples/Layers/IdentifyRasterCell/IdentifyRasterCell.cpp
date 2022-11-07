@@ -33,6 +33,7 @@
 #include "IdentifyLayerResult.h"
 #include "AttributeListModel.h"
 #include "Envelope.h"
+#include "QuickMouseEvent.h"
 
 #include <memory>
 #include <QString>
@@ -143,31 +144,31 @@ void IdentifyRasterCell::connectSignals()
     }
   });
 
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](const QMouseEvent& e)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](const QuickMouseEvent* e)
   {
-    m_mapView->identifyLayer(m_rasterLayer, e.pos().x(), e.pos().y(), 10, false, 1);
-    m_clickedPoint = m_mapView->screenToLocation(e.pos().x(), e.pos().y());
+    m_mapView->identifyLayer(m_rasterLayer, e->pos().x(), e->pos().y(), 10, false, 1);
+    m_clickedPoint = m_mapView->screenToLocation(e->pos().x(), e->pos().y());
   });
 
-  connect(m_mapView, &MapQuickView::mousePressedAndHeld, this, [this](const QMouseEvent& e)
+  connect(m_mapView, &MapQuickView::mousePressedAndHeld, this, [this](const QuickMouseEvent* e)
   {
-    m_mapView->identifyLayer(m_rasterLayer, e.pos().x(), e.pos().y(), 10, false, 1);
-    m_clickedPoint = m_mapView->screenToLocation(e.pos().x(), e.pos().y());
+    m_mapView->identifyLayer(m_rasterLayer, e->pos().x(), e->pos().y(), 10, false, 1);
+    m_clickedPoint = m_mapView->screenToLocation(e->pos().x(), e->pos().y());
     m_mousePressed = true;
   });
 
-  connect(m_mapView, &MapQuickView::mouseReleased, this, [this](QMouseEvent&)
+  connect(m_mapView, &MapQuickView::mouseReleased, this, [this](QuickMouseEvent*)
   {
     m_mousePressed = false;
   });
 
   // if mouse is moved after press-and-hold, then update callout on-the-fly
-  connect(m_mapView, &MapQuickView::mouseMoved, this, [this](const QMouseEvent& e)
+  connect(m_mapView, &MapQuickView::mouseMoved, this, [this](const QuickMouseEvent* e)
   {
     if (m_mousePressed)
     {
-      m_mapView->identifyLayer(m_rasterLayer, e.pos().x(), e.pos().y(), 10, false, 1);
-      m_clickedPoint = m_mapView->screenToLocation(e.pos().x(), e.pos().y());
+      m_mapView->identifyLayer(m_rasterLayer, e->pos().x(), e->pos().y(), 10, false, 1);
+      m_clickedPoint = m_mapView->screenToLocation(e->pos().x(), e->pos().y());
     }
   });
 }

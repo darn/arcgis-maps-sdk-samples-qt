@@ -57,6 +57,7 @@
 #include "Polygon.h"
 #include "Symbol.h"
 #include "SimpleLineSymbol.h"
+#include "QuickMouseEvent.h"
 
 #include <QImage>
 #include <QQmlContext>
@@ -116,7 +117,7 @@ void DisplayContentOfUtilityNetworkContainer::setMapView(MapQuickView* mapView)
 
 void DisplayContentOfUtilityNetworkContainer::createConnections()
 {
-  connect(m_mapView, &MapQuickView::mouseClicked, this, &DisplayContentOfUtilityNetworkContainer::identifyFeaturesAtMouseClick);
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this] (QuickMouseEvent* mouseEvent) { identifyFeaturesAtMouseClick(mouseEvent->qMouseEvent()); });
   connect(m_mapView, &MapQuickView::identifyLayersCompleted, this, &DisplayContentOfUtilityNetworkContainer::getUtilityAssociationsOfFeature);
   connect(m_utilityNetwork, &UtilityNetwork::featuresForElementsCompleted, this, &DisplayContentOfUtilityNetworkContainer::displayFeaturesAndGetAssociations);
 

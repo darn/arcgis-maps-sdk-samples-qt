@@ -35,6 +35,7 @@
 #include "LayerListModel.h"
 #include "TaskWatcher.h"
 #include "IdentifyLayerResult.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 #include <QList>
@@ -88,13 +89,13 @@ void FeatureLayerSelection::connectSignals()
 {
   //! [identify feature layer qml api snippet]
   // lambda expression for the mouse press event on the mapview... do an identify operation
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
     constexpr double tolerance = 22.0;
     constexpr bool returnPopupsOnly = false;
     constexpr int maximumResults = 1000;
-    const double screenX = mouseEvent.pos().x();
-    const double screenY = mouseEvent.pos().y();
+    const double screenX = mouseEvent->pos().x();
+    const double screenY = mouseEvent->pos().y();
     m_mapView->identifyLayer(m_featureLayer, screenX, screenY, tolerance, returnPopupsOnly, maximumResults);
   });
 

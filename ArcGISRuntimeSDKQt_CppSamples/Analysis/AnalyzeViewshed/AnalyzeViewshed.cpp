@@ -49,6 +49,7 @@
 #include "TaskWatcher.h"
 #include "FeatureIterator.h"
 #include "Field.h"
+#include "QuickMouseEvent.h"
 
 #include <QUuid>
 #include <QMouseEvent>
@@ -114,7 +115,7 @@ void AnalyzeViewshed::createOverlays()
 void AnalyzeViewshed::connectSignals()
 {
   // Set up signal handler for the mouse clicked signal
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouse)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouse)
   {
     // The geoprocessing task is still executing, don't do anything else (i.e. respond to
     // more user taps) until the processing is complete.
@@ -133,7 +134,7 @@ void AnalyzeViewshed::connectSignals()
     }
 
     // Create a marker graphic where the user clicked on the map and add it to the existing graphics overlay
-    Point mapPoint = m_mapView->screenToLocation(mouse.pos().x(), mouse.pos().y());
+    Point mapPoint = m_mapView->screenToLocation(mouse->pos().x(), mouse->pos().y());
     if (m_inputGraphic)
       m_inputGraphic->setGeometry(mapPoint);
 

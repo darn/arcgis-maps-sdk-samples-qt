@@ -43,6 +43,7 @@
 #include "Basemap.h"
 #include "SpatialReference.h"
 #include "Viewpoint.h"
+#include "QuickMouseEvent.h"
 
 #include <QScopedPointer>
 #include <QtCore/qglobal.h>
@@ -189,31 +190,31 @@ void OfflineGeocode::connectSignals()
 {
   connect(m_map, &Map::errorOccurred, this, &OfflineGeocode::logError);
   connect(m_mapView, &MapQuickView::errorOccurred, this, &OfflineGeocode::logError);
-  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseClicked, this, [this](QuickMouseEvent* mouseEvent)
   {
-    m_clickedPoint = m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y());
-    m_mapView->identifyGraphicsOverlay(m_graphicsOverlay, mouseEvent.pos().x(), mouseEvent.pos().y(), 5, false, 1);
+    m_clickedPoint = m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y());
+    m_mapView->identifyGraphicsOverlay(m_graphicsOverlay, mouseEvent->pos().x(), mouseEvent->pos().y(), 5, false, 1);
   });
 
-  connect(m_mapView, &MapQuickView::mousePressedAndHeld, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mousePressedAndHeld, this, [this](QuickMouseEvent* mouseEvent)
   {
     m_isPressAndHold = true;
     m_isReverseGeocode = true;
 
     // reverse geocode
-    m_locatorTask->reverseGeocodeWithParameters(Point(m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y())), m_reverseGeocodeParameters);
+    m_locatorTask->reverseGeocodeWithParameters(Point(m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y())), m_reverseGeocodeParameters);
 
     // make busy indicator visible
     m_geocodeInProgress = true;
     emit geocodeInProgressChanged();
   });
 
-  connect(m_mapView, &MapQuickView::mouseMoved, this, [this](QMouseEvent& mouseEvent)
+  connect(m_mapView, &MapQuickView::mouseMoved, this, [this](QuickMouseEvent* mouseEvent)
   {
     // if user is dragging mouse hold, realtime reverse geocode
     if (m_isPressAndHold)
     {
-      m_locatorTask->reverseGeocodeWithParameters(Point(m_mapView->screenToLocation(mouseEvent.pos().x(), mouseEvent.pos().y())), m_reverseGeocodeParameters);
+      m_locatorTask->reverseGeocodeWithParameters(Point(m_mapView->screenToLocation(mouseEvent->pos().x(), mouseEvent->pos().y())), m_reverseGeocodeParameters);
 
       m_geocodeInProgress = true;
       emit geocodeInProgressChanged();
